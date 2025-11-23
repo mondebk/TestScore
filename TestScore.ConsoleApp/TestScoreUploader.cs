@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using TestScore.Domain.Entities;
 using TestScore.Domain.Interfaces;
 using TestScore.Domain.Services;
 
@@ -6,23 +7,24 @@ namespace TestScore.ConsoleApp;
 
 public class TestScoreUploader : IHostedService
 {
-    private readonly ITestScoreRepository testScoreRepository;
+    private readonly IStudentScoreRepository _studentScoreRepository;
     private readonly TestScoreFileUploadService testScoreFileUploadService;
 
-    public TestScoreUploader(ITestScoreRepository testScoreRepository)
+    public TestScoreUploader(IStudentScoreRepository studentScoreRepository)
     {
-        this.testScoreRepository = testScoreRepository;
-        testScoreFileUploadService = new TestScoreFileUploadService(this.testScoreRepository);
+        this._studentScoreRepository = studentScoreRepository;
+        testScoreFileUploadService = new TestScoreFileUploadService(this._studentScoreRepository);
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
         Console.WriteLine("Welcome to the Test Score uploader service.");
         Console.WriteLine("Please specify the file path: ");
         var filePath = Console.ReadLine();
         Console.WriteLine($"Processing: {filePath}");
-        testScoreFileUploadService.Upload(filePath, cancellationToken);
-        return Task.CompletedTask;
+        var testScores = await testScoreFileUploadService.Upload(filePath, cancellationToken);
+        var highestScore = StudentScore.GetHighestScore(testScores);
+        Console.WriteLine(highestScore);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

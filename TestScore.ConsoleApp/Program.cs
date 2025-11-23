@@ -7,7 +7,7 @@ using TestScore.Repository;
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
-        services.AddSingleton<ITestScoreRepository, TestScoreRepository>();
+        services.AddSingleton<IStudentScoreRepository, StudentScoreRepository>();
         services.AddHostedService<TestScoreUploader>();
     })
     .Build();

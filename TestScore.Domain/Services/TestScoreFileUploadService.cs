@@ -5,14 +5,14 @@ namespace TestScore.Domain.Services;
 
 public class TestScoreFileUploadService
 {
-    private readonly ITestScoreRepository _testScoreRepository;
+    private readonly IStudentScoreRepository _studentScoreRepository;
 
-     public TestScoreFileUploadService(ITestScoreRepository testScoreRepository)
-     {
-         _testScoreRepository = testScoreRepository;
-     }
-    
-    public Task Upload(string filePath, CancellationToken cancellationToken)
+    public TestScoreFileUploadService(IStudentScoreRepository studentScoreRepository)
+    {
+        _studentScoreRepository = studentScoreRepository;
+    }
+
+    public Task<IEnumerable<StudentScore>> Upload(string filePath, CancellationToken cancellationToken)
     {
         try
         {
@@ -20,25 +20,40 @@ public class TestScoreFileUploadService
             {
                 throw new FileNotFoundException($"File not found: {filePath}");
             }
-            
-            var testScoreFile = new TestScoreFile()
-            {
-                FileSize = new FileInfo(filePath).Length,
-                FileName = Path.GetFileName(filePath),
-            };
-            
-            var lines = File.ReadLines(filePath);
-            
-            testScoreFile.Rows = lines.Count();
 
-            Console.WriteLine(lines);
+            var fileInfo = new FileInfo(filePath);
+
+            var lines = File.ReadLines(filePath);
+
+            var testScoreFile = CreateTestScoreFile(fileInfo, lines.Count());
             
-            return Task.CompletedTask;
+            return Task.FromResult(GetTestScores(lines, testScoreFile));
         }
         catch (IOException exception)
         {
             Console.WriteLine(exception.Message);
             throw;
         }
+    }
+
+    private static TestScoreFile CreateTestScoreFile(FileInfo fileInfo, int rows)
+    {
+        return new TestScoreFile()
+        {
+            FileSize = fileInfo.Length,
+            FileName = fileInfo.Name,
+            FileExtenstion = fileInfo.Extension,
+            Rows = rows
+        };
+    }
+    
+    private static IEnumerable<Entities.StudentScore> GetTestScores(IEnumerable<string> fileLines,TestScoreFile testScoreFile)
+    {
+        return fileLines.Skip(1).Select(testScore =>
+        {
+            var scoreArray =  testScore.Split(',');
+            var student = new Student(scoreArray[0], scoreArray[1]);
+            return new Entities.StudentScore(student, int.Parse(scoreArray[2]), testScoreFile);
+        });
     }
 }
