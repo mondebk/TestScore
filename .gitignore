@@ -1,0 +1,9 @@
+﻿TestScore.Repository/obj
+TestScore.Domain/obj
+TestScore.ConsoleApp/obj
+TestScore.Api/obj
+.idea
+TestScore.ConsoleApp/bin
+TestScore.Domain/bin
+TestScore.Repository/bin
+TestScore.Api/bin
