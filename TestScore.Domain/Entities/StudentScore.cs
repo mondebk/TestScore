@@ -6,13 +6,11 @@ public class StudentScore : Entity
 {
     public Student Student { get; private set; }
     public int Score { get; private set; }
-    public TestScoreFile File { get; private set; }
 
-    public StudentScore(Student student, int score, TestScoreFile file)
+    public StudentScore(Student student, int score)
     {
         Student = student;
         Score = score;
-        File = file;
     }
 
     public static string GetHighestScore(IEnumerable<StudentScore> studentScores)
@@ -20,6 +18,7 @@ public class StudentScore : Entity
         var highestScore = studentScores.Max(studentScore => studentScore.Score);
         var studentsWithHighestScore = studentScores
             .Where(studentScore => studentScore.Score == highestScore)
+            .OrderBy(studentScore => studentScore.Student.FirstName)
             .Select(studentScore => (studentScore.Student.FirstName, studentScore.Student.LastName));
 
         var stringBuilder = new StringBuilder();

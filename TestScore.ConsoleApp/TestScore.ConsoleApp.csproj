@@ -9,12 +9,15 @@
 
     <ItemGroup>
       <ProjectReference Include="..\TestScore.Domain\TestScore.Domain.csproj" />
-      <ProjectReference Include="..\TestScore.Repository\TestScore.Repository.csproj" />
+      <ProjectReference Include="..\TestScore.Infrastructure\TestScore.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="8.0.22" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+      <PackageReference Include="SQLite" Version="3.13.0" />
+      <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
     </ItemGroup>
 
 </Project>

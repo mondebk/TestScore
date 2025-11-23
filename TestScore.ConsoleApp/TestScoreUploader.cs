@@ -7,13 +7,19 @@ namespace TestScore.ConsoleApp;
 
 public class TestScoreUploader : IHostedService
 {
-    private readonly IStudentScoreRepository _studentScoreRepository;
+    private readonly IStudentScoreRepository studentScoreRepository;
+    private readonly ITestScoreFileRepository testScoreFileRepository;
     private readonly TestScoreFileUploadService testScoreFileUploadService;
 
-    public TestScoreUploader(IStudentScoreRepository studentScoreRepository)
+    public TestScoreUploader(IStudentScoreRepository studentScoreRepository,
+        ITestScoreFileRepository testScoreFileRepository)
     {
-        this._studentScoreRepository = studentScoreRepository;
-        testScoreFileUploadService = new TestScoreFileUploadService(this._studentScoreRepository);
+        this.studentScoreRepository = studentScoreRepository;
+        this.testScoreFileRepository = testScoreFileRepository;
+        
+        testScoreFileUploadService = new TestScoreFileUploadService(
+            this.studentScoreRepository, 
+            this.testScoreFileRepository);
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)

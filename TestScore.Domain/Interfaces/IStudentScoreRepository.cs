@@ -4,7 +4,9 @@ namespace TestScore.Domain.Interfaces;
 
 public interface IStudentScoreRepository
 {
-    public Task Add(IEnumerable<StudentScore> studentScores);
+    public Task Add(IEnumerable<StudentScore> studentScores, CancellationToken cancellationToken = default);
+
+    public Task<IEnumerable<StudentScore>> GetTopScore(CancellationToken cancellationToken = default);
     
-    public Task<IEnumerable<StudentScore>> GetWhere(Func<StudentScore, bool> predicate);
+    public Task<IEnumerable<StudentScore>> SearchScore(string searchTerm, CancellationToken cancellationToken = default);
 }

@@ -8,3 +8,6 @@ TestScore.Domain/bin
 TestScore.Repository/bin
 TestScore.Api/bin
 TestScore.sln.DotSettings.user
+TestScore.Application/obj
+TestScore.Infrastructure/obj
+TestScore.Infrastructure/bin
