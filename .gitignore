@@ -11,3 +11,12 @@ TestScore.sln.DotSettings.user
 TestScore.Application/obj
 TestScore.Infrastructure/obj
 TestScore.Infrastructure/bin
+TestScoring.Api/obj
+TestScoring.Api/bin
+TestScoring.ConsoleApp/bin
+TestScoring.ConsoleApp/obj
+TestScoring.Application/obj
+TestScoring.Domain/obj
+TestScoring.Infrastructure/bin
+TestScoring.Infrastructure/obj
+TestScoring.Domain/bin
