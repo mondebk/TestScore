@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TestScoring.Application.Models.Responses;
-using TestScoring.Domain.Interfaces.Repositories;
-using TestScoring.Domain.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using TestScoring.Application.Interfaces;
+using TestScoring.Application.Models;
 
 namespace TestScoring.Api.Student;
 
@@ -9,13 +13,11 @@ namespace TestScoring.Api.Student;
 [Route("api/[controller]")]
 public class StudentController : ControllerBase
 {
-    private ITestScoreRepository testScoreRepository;
-    private ScoreService scoreService;
+    private readonly ITestScoreRetrievalService _testScoreRetrievalService;
 
-    public StudentController(ITestScoreRepository testScoreRepository)
+    public StudentController(ITestScoreRetrievalService testScoreRetrievalService)
     {
-        this.testScoreRepository = testScoreRepository;
-        this.scoreService = new ScoreService(testScoreRepository);
+        _testScoreRetrievalService = testScoreRetrievalService;
     }
 
     [HttpGet("/{studentName}")]
@@ -23,7 +25,8 @@ public class StudentController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<StudentScoreResponse>>> SearchByName(string studentName,
+    public async Task<ActionResult<IEnumerable<StudentScoreResponse>>> SearchByName(
+        string studentName,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(studentName))
@@ -31,8 +34,21 @@ public class StudentController : ControllerBase
             return BadRequest("Student name cannot empty.");
         }
 
-        var studentResults = scoreService.Search(studentName, cancellationToken);
+        try
+        {
+            var studentResults = await _testScoreRetrievalService
+                .SearchScoreByStudentName(studentName, cancellationToken);
 
-        return Ok();
+            if (studentResults == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(studentResults);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An internal error occured");
+        }
     }
 }

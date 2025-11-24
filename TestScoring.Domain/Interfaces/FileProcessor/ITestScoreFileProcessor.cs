@@ -6,5 +6,10 @@ public interface ITestScoreFileProcessor
 {
     Task<IEnumerable<TestScore>> Process(string filePath, CancellationToken cancellationToken);
 
-    Task<IEnumerable<TestScore>> Process(string fileContent, string fileName, CancellationToken cancellationToken);
+    Task<IEnumerable<TestScore>> Process(
+        string fileContent,
+        string fileName, 
+        string fileExtension, 
+        long fileSize,
+        CancellationToken cancellationToken);
 }

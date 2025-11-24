@@ -4,14 +4,14 @@ using TestScoring.Infrastructure.Configuration.Database;
 
 namespace TestScoring.Infrastructure;
 
-public class DesignTimeFactory : IDesignTimeDbContextFactory<TestScorerDbContext>
+public class DesignTimeFactory : IDesignTimeDbContextFactory<TestScoringDbContext>
 {
-    public TestScorerDbContext CreateDbContext(string[] args)
+    public TestScoringDbContext CreateDbContext(string[] args)
     {
-        var options = new DbContextOptionsBuilder<TestScorerDbContext>()
+        var options = new DbContextOptionsBuilder<TestScoringDbContext>()
             .UseSqlite("Data Source=testscoreapp.db")
             .Options;
 
-        return new TestScorerDbContext(options);
+        return new TestScoringDbContext(options);
     }
 }

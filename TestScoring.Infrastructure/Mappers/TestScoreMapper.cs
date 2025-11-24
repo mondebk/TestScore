@@ -3,7 +3,7 @@ using TestScoring.Infrastructure.Models;
 
 namespace TestScoring.Infrastructure.Mappers;
 
-public static class StudentScoreMapper
+public static class TestScoreMapper
 {
     public static TestScore ToDomain(TestScoreEntity testScoreEntity)
     {

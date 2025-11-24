@@ -57,6 +57,7 @@ public class TestScore : Entity
                 stringBuilder.Append(' ');
         }
 
+        stringBuilder.AppendLine();
         stringBuilder.AppendLine($"Score: {highestScore}");
         return stringBuilder.ToString();
     }

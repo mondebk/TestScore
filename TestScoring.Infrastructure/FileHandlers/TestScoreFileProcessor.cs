@@ -18,7 +18,11 @@ public class TestScoreFileProcessor : ITestScoreFileProcessor
 
             var lines = File.ReadLines(filePath);
 
-            var testScoreFile = CreateTestScoreFile(fileInfo, lines.Count());
+            var testScoreFile = new TestScoreFile(
+                fileInfo.Name,
+                fileInfo.Length,
+                fileInfo.Extension,
+                lines.Count());
 
             return Task.FromResult(TestScore.Create(lines, testScoreFile));
         }
@@ -29,16 +33,25 @@ public class TestScoreFileProcessor : ITestScoreFileProcessor
         }
     }
 
-    public Task<IEnumerable<TestScore>> Process(
-        string fileContent, 
+    public async Task<IEnumerable<TestScore>> Process(
+        string fileContent,
         string fileName,
+        string fileExtension,
+        long fileSize,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
+        try
+        {
+            var lines = fileContent.Split(["\r\n", "\n", "\r"], StringSplitOptions.RemoveEmptyEntries);
 
-    private static TestScoreFile CreateTestScoreFile(FileInfo fileInfo, int rows)
-    {
-        return new TestScoreFile(fileInfo.Name, fileInfo.Length, fileInfo.Extension, rows);
+            var testScoreFile = new TestScoreFile(fileName, fileSize, fileExtension, lines.Length);
+
+            return TestScore.Create(lines, testScoreFile);
+        }
+        catch (IOException exception)
+        {
+            Console.WriteLine(exception.Message);
+            throw;
+        }
     }
 }

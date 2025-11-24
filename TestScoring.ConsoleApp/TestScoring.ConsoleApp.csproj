@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\TestScoring.Application\TestScoring.Application.csproj" />
       <ProjectReference Include="..\TestScoring.Domain\TestScoring.Domain.csproj" />
       <ProjectReference Include="..\TestScoring.Infrastructure\TestScoring.Infrastructure.csproj" />
     </ItemGroup>

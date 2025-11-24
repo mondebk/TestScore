@@ -3,13 +3,13 @@ using TestScoring.Infrastructure.Models;
 
 namespace TestScoring.Infrastructure.Configuration.Database;
 
-public class TestScorerDbContext : DbContext
+public class TestScoringDbContext : DbContext
 {
-    public DbSet<TestScoreEntity> StudentScores => Set<TestScoreEntity>();
+    public DbSet<TestScoreEntity> TestScores => Set<TestScoreEntity>();
     
     public DbSet<TestScoreFileEntity> TestScoreFiles => Set<TestScoreFileEntity>();
 
-    public TestScorerDbContext(DbContextOptions<TestScorerDbContext> options) : base(options)
+    public TestScoringDbContext(DbContextOptions<TestScoringDbContext> options) : base(options)
     {
         
     }

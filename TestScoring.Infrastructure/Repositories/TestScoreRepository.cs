@@ -8,48 +8,52 @@ namespace TestScoring.Infrastructure.Repositories;
 
 public class TestScoreRepository : ITestScoreRepository
 {
-    private readonly TestScorerDbContext _dbContext;
+    private readonly TestScoringDbContext _dbContext;
 
-    public TestScoreRepository(TestScorerDbContext dbContext)
+    public TestScoreRepository(TestScoringDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task Add(IEnumerable<TestScore> studentScores,
+    public async Task Add(
+        IEnumerable<TestScore> testScores,
         CancellationToken cancellationToken = default)
     {
-        var studentScoreEntities = studentScores
-            .Select(studentScore => StudentScoreMapper.ToEntity(studentScore));
+        var testScoreEntities = testScores
+            .Select(testScore => TestScoreMapper.ToEntity(testScore));
 
-        await _dbContext.StudentScores.AddRangeAsync(studentScoreEntities, cancellationToken);
+        await _dbContext.TestScores.AddRangeAsync(testScoreEntities, cancellationToken);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<TestScore>> GetTopScore(
-        CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TestScore>> GetTopScore(CancellationToken cancellationToken = default)
     {
-        var topScore = await _dbContext.StudentScores
-            .MaxAsync(studentScore => studentScore.Score, cancellationToken);
+        var topScore = await _dbContext.TestScores
+            .MaxAsync(testScore => testScore.Score, cancellationToken);
 
-        var topScoreEntities = await _dbContext.StudentScores
-            .Where(studentScore => studentScore.Score == topScore)
-            .OrderBy(studentScore => studentScore.FirstName)
-            .ThenBy(studentScore => studentScore.LastName)
+        var topScoreEntities = await _dbContext.TestScores
+            .Where(testScore => testScore.Score == topScore)
+            .OrderBy(testScore => testScore.FirstName)
+            .ThenBy(testScore => testScore.LastName)
             .ToListAsync(cancellationToken);
 
-        return topScoreEntities.Select(topScore => StudentScoreMapper.ToDomain(topScore));
+        return topScoreEntities.Select(testScoreEntity => TestScoreMapper.ToDomain(testScoreEntity));
     }
 
-    public async Task<IEnumerable<TestScore>> SearchScore(string searchTerm,
+    public async Task<IEnumerable<TestScore>> SearchScore(
+        string searchTerm,
         CancellationToken cancellationToken = default)
     {
-        var searchResults = await _dbContext.StudentScores
-            .Where(studentScore => studentScore.FirstName.Contains(searchTerm) || studentScore.LastName.Contains(searchTerm))
-            .OrderBy(studentScore => studentScore.FirstName)
-            .ThenBy(studentScore => studentScore.LastName)
+        var searchResults = await _dbContext.TestScores
+            .Where(testScore =>
+                testScore.FirstName.Contains(searchTerm) || testScore.LastName.Contains(searchTerm))
+            .GroupBy(testScore => new { testScore.FirstName, testScore.LastName })
+            .Select(group => group.OrderByDescending(testScore => testScore.Score).First())
+            .OrderBy(testScore => testScore.FirstName)
+            .ThenBy(testScore => testScore.LastName)
             .ToListAsync(cancellationToken);
 
-        return searchResults.Select(searchResult => StudentScoreMapper.ToDomain(searchResult));
+        return searchResults.Select(searchResult => TestScoreMapper.ToDomain(searchResult));
     }
 }

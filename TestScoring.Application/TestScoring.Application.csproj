@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Models\Requests\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\TestScoring.Domain\TestScoring.Domain.csproj" />
       <ProjectReference Include="..\TestScoring.Infrastructure\TestScoring.Infrastructure.csproj" />
     </ItemGroup>

@@ -23,26 +23,30 @@ public class FileUploadService : IFileUploadService
     }
 
     public async Task<IEnumerable<TestScore>> UploadFile(
-        Stream fileStream, 
+        Stream fileStream,
         string fileName, 
+        string fileExtension, 
+        long fileSize,
         CancellationToken cancellationToken)
     {
         using var fileStreamReader = new StreamReader(fileStream);
-        
+
         var testFileContent = await fileStreamReader.ReadToEndAsync(cancellationToken);
 
         var testScores = await _testScoreFileProcessor.Process(
-            testFileContent, 
+            testFileContent,
             fileName,
+            fileExtension,
+            fileSize,
             cancellationToken);
 
         if (!testScores.Any())
         {
             throw new FileEmptyException("File contains no test scores");
         }
-        
+
         await SaveTestScores(testScores, cancellationToken);
-        
+
         return testScores;
     }
 

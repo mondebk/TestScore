@@ -1,22 +1,23 @@
-﻿using System.Data.Common;
-using Microsoft.EntityFrameworkCore;
-using TestScoring.Domain.Entities;
+﻿using TestScoring.Domain.Entities;
 using TestScoring.Domain.Interfaces.Repositories;
 using TestScoring.Infrastructure.Configuration.Database;
+using TestScoring.Infrastructure.Mappers;
 
 namespace TestScoring.Infrastructure.Repositories;
 
 public class TestScoreFileRepository : ITestScoreFileRepository
 {
-    private readonly TestScorerDbContext dbContext;
+    private readonly TestScoringDbContext _dbContext;
     
-    public TestScoreFileRepository(TestScorerDbContext dbContext)
+    public TestScoreFileRepository(TestScoringDbContext dbContext)
     {
-        this.dbContext = dbContext;
+        _dbContext = dbContext;
     }
     
-    public Task Add(TestScoreFile testScoreFile, CancellationToken cancellationToken)
+    public async Task Add(TestScoreFile testScoreFile, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var testScoreEntity = TestScoreFileMapper.ToEntity(testScoreFile);
+        
+        await _dbContext.AddAsync(testScoreEntity, cancellationToken);
     }
 }

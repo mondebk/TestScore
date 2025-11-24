@@ -1,12 +1,10 @@
-﻿using TestScoring.Application.Models.Responses;
+﻿using TestScoring.Application.Models;
 
 namespace TestScoring.Application.Interfaces;
 
 public interface ITestScoreRetrievalService
 {
-    Task<string> GetTopScoreFromFile(string filePath, CancellationToken cancellationToken);
+    Task<StudentScoreResponse?> SearchScoreByStudentName(string studentName, CancellationToken cancellationToken);
     
-    Task<string> GetTopScoresFromFile(string filePath, CancellationToken cancellationToken);
-    
-    Task<TopScoreResponse> GetTopScoresFromStorage(CancellationToken cancellationToken);
+    Task<TopScoreResponse?> GetTopScore(CancellationToken cancellationToken);
 }
