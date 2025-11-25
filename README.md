@@ -20,6 +20,7 @@ In order to run the solution, the following steps must be followed:
 > \AppData\Local\TestScoring\testscoringapp.db.
 > This initialisation process will trigger regardless of the startup project chosen.
 
+> global.json in the solution root may cause issues when running the solution. In that case, delete the file and rebuild the solution.
 ___
 
 # Project Details
