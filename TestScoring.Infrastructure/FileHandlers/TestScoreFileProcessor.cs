@@ -33,7 +33,7 @@ public class TestScoreFileProcessor : ITestScoreFileProcessor
         }
     }
 
-    public async Task<IEnumerable<TestScore>> Process(
+    public Task<IEnumerable<TestScore>> Process(
         string fileContent,
         string fileName,
         string fileExtension,
@@ -46,7 +46,7 @@ public class TestScoreFileProcessor : ITestScoreFileProcessor
 
             var testScoreFile = new TestScoreFile(fileName, fileSize, fileExtension, lines.Length);
 
-            return TestScore.Create(lines, testScoreFile);
+            return Task.FromResult(TestScore.Create(lines, testScoreFile));
         }
         catch (IOException exception)
         {

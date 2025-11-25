@@ -23,12 +23,9 @@ public class TestScore : Entity
 
     public static IEnumerable<TestScore> Create(
         IEnumerable<string> fileText,
-        TestScoreFile testScoreFile, 
-        bool hasHeaderRow = true)
+        TestScoreFile testScoreFile)
     {
-        var rowsToSkip = hasHeaderRow ? 1 : 0;
-
-        return fileText.Skip(rowsToSkip).Select(testScore =>
+        return fileText.Skip(1).Select(testScore =>
         {
             var scoreArray = testScore.Split(',');
             var student = new Student(scoreArray[0], scoreArray[1]);

@@ -46,14 +46,18 @@ public class TestScoreRepository : ITestScoreRepository
         CancellationToken cancellationToken = default)
     {
         var searchResults = await _dbContext.TestScores
-            .Where(testScore =>
-                testScore.FirstName.Contains(searchTerm) || testScore.LastName.Contains(searchTerm))
-            .GroupBy(testScore => new { testScore.FirstName, testScore.LastName })
-            .Select(group => group.OrderByDescending(testScore => testScore.Score).First())
+            .Where(testScore => testScore.FirstName.Contains(searchTerm) || testScore.LastName.Contains(searchTerm))
             .OrderBy(testScore => testScore.FirstName)
             .ThenBy(testScore => testScore.LastName)
             .ToListAsync(cancellationToken);
 
-        return searchResults.Select(searchResult => TestScoreMapper.ToDomain(searchResult));
+        var topTestScores = searchResults
+            .GroupBy(testScore => new { testScore.FirstName, testScore.LastName })
+            .Select(group => group.OrderByDescending(testScore => testScore.Score).First())
+            .OrderBy(student => student.FirstName)
+            .ThenBy(student => student.LastName)
+            .ToList();
+
+        return topTestScores.Select(topScore => TestScoreMapper.ToDomain(topScore));
     }
 }
