@@ -14,14 +14,11 @@ using TestScoring.Infrastructure.Repositories;
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
+        var dbPath = DatabasePath.Get();
         services.AddDbContext<TestScoringDbContext>(options =>
         {
-            var dbPath = DatabasePath.Get();
-            services.AddDbContext<TestScoringDbContext>(options =>
-            {
-                options.UseSqlite($"Data Source={dbPath}");
-                options.EnableSensitiveDataLogging(false);
-            });
+            options.UseSqlite($"Data Source={dbPath}");
+            options.EnableSensitiveDataLogging(false);
         });
 
         services.AddSingleton<ITestScoreRepository, TestScoreRepository>();

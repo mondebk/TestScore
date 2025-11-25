@@ -21,3 +21,5 @@ TestScoring.Infrastructure/bin
 TestScoring.Infrastructure/obj
 TestScoring.Domain/bin
 TestScoring.Application/bin
+global.json
+TestScoring.sln.DotSettings.user
