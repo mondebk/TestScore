@@ -9,11 +9,4 @@ public class TestScoreFileEntity : Entity
     public string Extension { get; set; }
     public int Rows { get; set; }
     public DateTime ModifiedDate { get; set; }
-    
-    public void Update(long size, int rows)
-    {
-        Size = size;
-        Rows = rows;
-        ModifiedDate = DateTime.UtcNow;
-    }
 }
